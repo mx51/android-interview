@@ -2,6 +2,7 @@
     <string name="app_name">App-UI</string>
     <string name="refresh_btn">Refresh</string>
     <string name="weather_location_title_label">%1$s Weather</string>
-    <string name="temperature_label">%.2f ℃</string>
+    <string name="temperature_celsius_label">%.2f ℃</string>
+    <string name="temperature_fahrenheit_label">%.2f °F</string>
     <string name="wind_label">%.2f m/s Wind</string>
 </resources>

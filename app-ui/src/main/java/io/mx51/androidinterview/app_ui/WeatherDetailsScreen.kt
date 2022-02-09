@@ -19,6 +19,7 @@ import io.mx51.app_ui.R
 
 @Composable
 fun WeatherDetailsScreen(
+    isImperialUnit: Boolean = false,
     locationName: String,
     temperature: Double,
     windSpeed: Double,
@@ -50,8 +51,13 @@ fun WeatherDetailsScreen(
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        val text = if (isImperialUnit) {
+                            stringResource(R.string.temperature_fahrenheit_label, temperature)
+                        } else {
+                            stringResource(R.string.temperature_celsius_label, temperature)
+                        }
                         Text(
-                            text = stringResource(R.string.temperature_label, temperature),
+                            text = text,
                             modifier = Modifier.padding(top = 5.dp),
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 30.sp,
