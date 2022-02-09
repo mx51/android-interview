@@ -19,11 +19,15 @@ import io.mx51.app_ui.R
 
 @Composable
 fun WeatherDetailsScreen(
+    isImperialUnit: Boolean = false,
     locationName: String,
     temperature: Double,
+    isWindSpeedInMeterPerSecond: Boolean = true,
     windSpeed: Double,
     description: String,
-    onRefreshClicked: () -> Unit
+    onRefreshClicked: () -> Unit,
+    onSwitchTemperatureUnitClick: (Boolean) -> Unit,
+    onSwitchWindSpeedUnitClick: (Boolean) -> Unit
 ) {
     AndroidInterviewTheme {
         Surface(
@@ -50,17 +54,59 @@ fun WeatherDetailsScreen(
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        val text = if (isImperialUnit) {
+                            stringResource(R.string.temperature_fahrenheit_label, temperature)
+                        } else {
+                            stringResource(R.string.temperature_celsius_label, temperature)
+                        }
                         Text(
-                            text = stringResource(R.string.temperature_label, temperature),
+                            text = text,
                             modifier = Modifier.padding(top = 5.dp),
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 30.sp,
                         )
+
+                        Button(
+                            onClick = { onSwitchTemperatureUnitClick(!isImperialUnit) },
+                            modifier = Modifier.padding(top = 5.dp)
+                        ) {
+                            val text = if (isImperialUnit) {
+                                stringResource(id = R.string.switch_to_celsius_btn_txt)
+                            } else {
+                                stringResource(id = R.string.switch_to_fahrenheit_btn_txt)
+                            }
+                            Text(
+                                text = text,
+                                fontWeight = FontWeight.W500,
+                                fontSize = 18.sp
+                            )
+                        }
+                        val speedTxt = if (isWindSpeedInMeterPerSecond) {
+                            stringResource(R.string.wind_speed_meter_per_sec_label, windSpeed)
+                        } else {
+                            stringResource(R.string.wind_speed_knots_label, windSpeed)
+                        }
                         Text(
-                            text = stringResource(R.string.wind_label, windSpeed),
-                            modifier = Modifier.padding(top = 2.dp),
+                            text = speedTxt,
+                            modifier = Modifier.padding(top = 25.dp),
                             fontSize = 18.sp,
                         )
+
+                        Button(
+                            onClick = { onSwitchWindSpeedUnitClick(!isWindSpeedInMeterPerSecond) },
+                            modifier = Modifier.padding(top = 5.dp)
+                        ) {
+                            val text = if (isWindSpeedInMeterPerSecond) {
+                                stringResource(id = R.string.switch_to_knots_btn_txt)
+                            } else {
+                                stringResource(id = R.string.switch_to_meter_per_second_btn_txt)
+                            }
+                            Text(
+                                text = text,
+                                fontWeight = FontWeight.W500,
+                                fontSize = 18.sp
+                            )
+                        }
                     }
                     Text(
                         text = description,
@@ -90,11 +136,15 @@ fun WeatherDetailsScreen(
 fun WeatherDetailsScreenPreview() {
     AndroidInterviewTheme {
         WeatherDetailsScreen(
+            isImperialUnit = false,
             temperature = 32.45,
+            isWindSpeedInMeterPerSecond = true,
             windSpeed = 2.57,
             description = "Sunny",
             locationName = "Sydney",
-            onRefreshClicked = { }
+            onRefreshClicked = {},
+            onSwitchTemperatureUnitClick = {},
+            onSwitchWindSpeedUnitClick = {}
         )
     }
 }

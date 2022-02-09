@@ -2,10 +2,11 @@ package io.mx51.androidinterview
 
 import android.app.Application
 import io.mx51.androidinterview.viewmodels.WeatherViewModel
-import io.mx51.androidinterview.data.WeatherDetailsRepository
+import io.mx51.androidinterview.domain.repository.WeatherDetailsRepository
 import io.mx51.androidinterview.data.impl.DefaultWeatherDetailsRepository
 import io.mx51.androidinterview.data.impl.OpenWeatherMapServiceProvider
-import io.mx51.androidinterview.domain.GetWeatherDetailsUseCase
+import io.mx51.androidinterview.data.impl.WeatherStackServiceProvider
+import io.mx51.androidinterview.domain.interactor.GetWeatherDetailsUseCase
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 
@@ -19,9 +20,10 @@ class AndroidInterviewApplication: Application() {
             androidContext(applicationContext)
             modules(
                 module {
-                    single<WeatherDetailsRepository> { DefaultWeatherDetailsRepository(get()) }
+                    single<WeatherDetailsRepository> { DefaultWeatherDetailsRepository(get(), get()) }
                     single { GetWeatherDetailsUseCase(get()) }
                     single { OpenWeatherMapServiceProvider.provideOpenWeatherMapService() }
+                    single { WeatherStackServiceProvider.provideWeatherStackService() }
                     viewModel { WeatherViewModel(get()) }
                 }
             )

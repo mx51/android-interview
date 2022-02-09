@@ -1,4 +1,4 @@
-package io.mx51.androidinterview.domain
+package io.mx51.androidinterview.domain.interactor
 
 abstract class UseCase<in UseCaseParams, out UseCaseResult> {
 
