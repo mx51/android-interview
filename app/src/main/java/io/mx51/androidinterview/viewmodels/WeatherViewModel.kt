@@ -14,20 +14,27 @@ class WeatherViewModel(
     private val getWeatherDetailsUseCase: GetWeatherDetailsUseCase
 ): ViewModel() {
 
-    private val _weatherDetails: MutableStateFlow<WeatherDetails?> = MutableStateFlow(null)
-    val weatherDetails = _weatherDetails.asStateFlow()
+    sealed class State {
+        object Loading: State()
+        data class Loaded(val weatherDetails: WeatherDetails): State()
+        data class LoadError(val message: String?, val unit: Units): State()
+    }
+
+    private val _uiState:MutableStateFlow<State> = MutableStateFlow(State.Loading)
+    val uiState = _uiState.asStateFlow()
+
 
     fun getWeatherDetails(unit: Units) {
+        _uiState.value = State.Loading // every time request for weather details display the loading progress
         viewModelScope.launch(Dispatchers.IO) {
             getWeatherDetailsUseCase(unit).fold(
                 onSuccess = {
-                    _weatherDetails.value = it
+                    _uiState.value = State.Loaded(it)
                 },
                 onFailure = {
-
+                    _uiState.value = State.LoadError(it.message, unit)
                 }
             )
-
         }
     }
 }
