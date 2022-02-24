@@ -25,8 +25,10 @@ class DefaultWeatherDetailsRepository(
         units: String
     ): WeatherDetails {
 
+        //TODO - use the [openWeatherMapService] to fetch the weather first and fail-over to [weatherStackService]
+        // in case of errors
         return try {
-            openWeatherMapService.getCurrentWeather(
+            weatherStackService.getCurrentWeather(
                 location = location,
                 units = units
             ).toWeatherDetails()
