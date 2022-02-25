@@ -1,6 +1,7 @@
 package io.mx51.androidinterview.data.retrofit
 
 import com.google.gson.annotations.SerializedName
+import io.mx51.androidinterview.data.model.MeasurementUnit
 import io.mx51.androidinterview.data.model.WeatherDetails
 
 data class OpenWeatherMapDTO(
@@ -32,6 +33,7 @@ data class OpenWeatherMapDTO(
         temperature = main.temp,
         windSpeed = wind.speed,
         description = weather.firstOrNull()?.main ?: "",
-        locationName = name
+        locationName = name,
+        measurementUnit = MeasurementUnit.Metric //TODO - get this from the open weather response
     )
 }

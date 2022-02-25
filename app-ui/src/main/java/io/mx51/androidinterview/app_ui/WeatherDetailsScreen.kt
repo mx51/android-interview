@@ -1,10 +1,7 @@
 package io.mx51.androidinterview.app_ui
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,8 +20,26 @@ fun WeatherDetailsScreen(
     temperature: Double,
     windSpeed: Double,
     description: String,
-    onRefreshClicked: () -> Unit
+    useImperial: Boolean,
+    onRefreshClicked: (Boolean) -> Unit
 ) {
+
+    val temperatureUnit = stringResource(
+        id = if (useImperial) {
+            R.string.temperature_unit_f
+        } else {
+            R.string.temperature_unit_m
+        }
+    )
+
+    val windSpeedUnit = stringResource(
+        id = if (useImperial) {
+            R.string.wind_speed_unit_f
+        } else {
+            R.string.wind_speed_unit_m
+        }
+    )
+
     AndroidInterviewTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -35,7 +50,11 @@ fun WeatherDetailsScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = stringResource(R.string.weather_location_title_label, locationName),
+                    text = stringResource(
+                        R.string.weather_location_title_label,
+                        locationName
+                    ),
+
                     modifier = Modifier.padding(vertical = 10.dp),
                     fontSize = 40.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -51,13 +70,21 @@ fun WeatherDetailsScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = stringResource(R.string.temperature_label, temperature),
+                            text = stringResource(
+                                R.string.temperature_label,
+                                temperature,
+                                temperatureUnit
+                            ),
                             modifier = Modifier.padding(top = 5.dp),
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 30.sp,
                         )
                         Text(
-                            text = stringResource(R.string.wind_label, windSpeed),
+                            text = stringResource(
+                                R.string.wind_label,
+                                windSpeed,
+                                windSpeedUnit
+                            ),
                             modifier = Modifier.padding(top = 2.dp),
                             fontSize = 18.sp,
                         )
@@ -69,8 +96,33 @@ fun WeatherDetailsScreen(
                         fontWeight = FontWeight.SemiBold,
                     )
                 }
+
+
+                Row(
+                    modifier = Modifier
+                        .padding(top = 25.dp),
+
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Text(
+                        text = "Use imperial units?",
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                    )
+
+                    Switch(
+                        checked = useImperial,
+                        onCheckedChange = {
+                            onRefreshClicked.invoke(it)
+                        })
+                }
+
                 Button(
-                    onClick = onRefreshClicked,
+                    onClick = {
+                        onRefreshClicked.invoke(useImperial)
+                    },
                     modifier = Modifier
                         .padding(top = 25.dp)
                 ) {
@@ -94,6 +146,7 @@ fun WeatherDetailsScreenPreview() {
             windSpeed = 2.57,
             description = "Sunny",
             locationName = "Sydney",
+            useImperial = true,
             onRefreshClicked = { }
         )
     }
