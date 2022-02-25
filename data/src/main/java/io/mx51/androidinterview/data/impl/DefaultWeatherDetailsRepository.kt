@@ -1,8 +1,11 @@
 package io.mx51.androidinterview.data.impl
 
 import io.mx51.androidinterview.data.WeatherDetailsRepository
-import io.mx51.androidinterview.data.model.MeasurementUnit
-import io.mx51.androidinterview.data.model.WeatherDetails
+import io.mx51.androidinterview.data.extensions.defaultSpeedUnit
+import io.mx51.androidinterview.data.extensions.speedUnit
+import io.mx51.androidinterview.data.extensions.temperatureUnit
+import io.mx51.androidinterview.data.extensions.to
+import io.mx51.androidinterview.data.model.*
 import io.mx51.androidinterview.data.retrofit.OpenWeatherMapService
 import io.mx51.androidinterview.data.retrofit.WeatherStackService
 import retrofit2.HttpException
@@ -23,31 +26,78 @@ class DefaultWeatherDetailsRepository(
      */
     override suspend fun getWeatherDetails(
         location: String,
-        units: MeasurementUnit
+        units: MeasurementSystem
     ): WeatherDetails {
+
+        val weatherDetails = getWeatherDetailsFromSecondaryService(
+            location = location,
+            units = units
+        ) ?: getWeatherDetailsFromSecondaryService(
+            location = location,
+            units = units
+        )
+
+        //TODO - force unwrapping may result in null pointer exception
+        // will need to implement better error handling and think about user feedback in case of errors
+        return weatherDetails!!
+    }
+
+    private suspend fun getWeatherDetailsFromDefaultService(
+        location: String,
+        units: MeasurementSystem
+    ): WeatherDetails? {
         return try {
             val unitsString = when(units) {
-                MeasurementUnit.Metric -> "metric"
-                MeasurementUnit.Imperial -> "imperial"
+                MeasurementSystem.Metric -> "metric"
+                MeasurementSystem.Imperial -> "imperial"
             }
+
             openWeatherMapService.getCurrentWeather(
                 location = location,
                 units = unitsString
             ).toWeatherDetails(
-                units
+                temperatureUnit = units.temperatureUnit(),
+                windSpeedUnit = units.defaultSpeedUnit()
             )
         } catch (exception: HttpException) {
+            null
+        }
+    }
+
+    private suspend fun getWeatherDetailsFromSecondaryService(
+        location: String,
+        units: MeasurementSystem
+    ): WeatherDetails? {
+        return try {
             val unitsString = when(units) {
-                MeasurementUnit.Metric -> "m"
-                MeasurementUnit.Imperial -> "f"
+                MeasurementSystem.Metric -> "m"
+                MeasurementSystem.Imperial -> "f"
             }
 
-            weatherStackService.getCurrentWeather(
+            // WeatherStack returns wind speed in km/h for the metric system
+            // Will need to convert to m/s
+            val result = weatherStackService.getCurrentWeather(
                 location = location,
                 units = unitsString
             ).toWeatherDetails(
-                units
+                temperatureUnit = units.temperatureUnit(),
+                windSpeedUnit = units.speedUnit()
             )
+
+            return if(units == MeasurementSystem.Metric) {
+                WeatherDetails(
+                    temperature = result.temperature,
+                    windSpeed = result.windSpeed.to(
+                        SpeedUnit.MetersPerSecond
+                    ),
+                    description = result.description,
+                    locationName = result.locationName
+                )
+            } else {
+                result
+            }
+        } catch (exception: HttpException) {
+            null
         }
     }
 }

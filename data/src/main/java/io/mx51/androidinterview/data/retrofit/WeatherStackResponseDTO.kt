@@ -1,7 +1,8 @@
 package io.mx51.androidinterview.data.retrofit
 
 import com.google.gson.annotations.SerializedName
-import io.mx51.androidinterview.data.model.MeasurementUnit
+import io.mx51.androidinterview.data.model.SpeedUnit
+import io.mx51.androidinterview.data.model.TemperatureUnit
 import io.mx51.androidinterview.data.model.WeatherDetails
 
 data class WeatherStackResponseDTO(
@@ -28,12 +29,14 @@ data class WeatherStackResponseDTO(
     )
 
     fun toWeatherDetails(
-        units: MeasurementUnit
+        temperatureUnit: TemperatureUnit,
+        windSpeedUnit: SpeedUnit
     ) = WeatherDetails(
+        temperatureUnit = temperatureUnit,
+        windSpeedUnit = windSpeedUnit,
         temperature = weather.temperature,
         windSpeed = weather.windSpeed,
         description = weather.descriptions.firstOrNull() ?: "",
-        locationName = location.name,
-        measurementUnit = units
+        locationName = location.name
     )
 }

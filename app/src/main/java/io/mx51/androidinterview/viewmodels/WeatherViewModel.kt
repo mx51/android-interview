@@ -2,7 +2,7 @@ package io.mx51.androidinterview.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.mx51.androidinterview.data.model.MeasurementUnit
+import io.mx51.androidinterview.data.model.MeasurementSystem
 import io.mx51.androidinterview.data.model.WeatherDetails
 import io.mx51.androidinterview.domain.GetWeatherDetailsUseCase
 import io.mx51.androidinterview.domain.WeatherRequestParameters
@@ -19,14 +19,14 @@ class WeatherViewModel(
     val weatherDetails = _weatherDetails.asStateFlow()
 
     fun getWeatherDetails(
-        unit: MeasurementUnit = MeasurementUnit.Metric,
+        system: MeasurementSystem = MeasurementSystem.Metric,
         location: String = "New York",
     ) {
         viewModelScope.launch {
             _weatherDetails.value = getWeatherDetailsUseCase {
                 WeatherRequestParameters(
                     location = location,
-                    units = unit
+                    units = system
                 )
             }
         }
