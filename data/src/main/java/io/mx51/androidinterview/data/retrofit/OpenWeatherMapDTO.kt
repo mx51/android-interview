@@ -29,11 +29,13 @@ data class OpenWeatherMapDTO(
         val speed: Double
     )
 
-    fun toWeatherDetails() = WeatherDetails(
+    fun toWeatherDetails(
+        units: MeasurementUnit
+    ) = WeatherDetails(
         temperature = main.temp,
         windSpeed = wind.speed,
         description = weather.firstOrNull()?.main ?: "",
         locationName = name,
-        measurementUnit = MeasurementUnit.Metric //TODO - get this from the open weather response
+        measurementUnit = units
     )
 }

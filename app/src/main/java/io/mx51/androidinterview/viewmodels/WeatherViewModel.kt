@@ -26,7 +26,7 @@ class WeatherViewModel(
             _weatherDetails.value = getWeatherDetailsUseCase {
                 WeatherRequestParameters(
                     location = location,
-                    units = unit.code
+                    units = unit
                 )
             }
         }

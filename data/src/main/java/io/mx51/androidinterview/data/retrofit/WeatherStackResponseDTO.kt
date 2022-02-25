@@ -9,16 +9,8 @@ data class WeatherStackResponseDTO(
     val weather: CurrentWeather,
 
     @SerializedName("location")
-    val location: Location,
-
-    @SerializedName("request")
-    val request: CurrentWeatherRequest
+    val location: Location
 ) {
-
-    data class CurrentWeatherRequest(
-        @SerializedName("unit")
-        val units: MeasurementUnit
-    )
 
     data class CurrentWeather(
         @SerializedName("temperature")
@@ -35,11 +27,13 @@ data class WeatherStackResponseDTO(
         val name: String
     )
 
-    fun toWeatherDetails() = WeatherDetails(
+    fun toWeatherDetails(
+        units: MeasurementUnit
+    ) = WeatherDetails(
         temperature = weather.temperature,
         windSpeed = weather.windSpeed,
         description = weather.descriptions.firstOrNull() ?: "",
         locationName = location.name,
-        measurementUnit = request.units
+        measurementUnit = units
     )
 }

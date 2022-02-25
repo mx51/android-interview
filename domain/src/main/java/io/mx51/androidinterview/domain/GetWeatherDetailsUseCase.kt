@@ -1,6 +1,7 @@
 package io.mx51.androidinterview.domain
 
 import io.mx51.androidinterview.data.WeatherDetailsRepository
+import io.mx51.androidinterview.data.model.MeasurementUnit
 import io.mx51.androidinterview.data.model.WeatherDetails
 
 class GetWeatherDetailsUseCase(
@@ -22,5 +23,5 @@ class GetWeatherDetailsUseCase(
 
 data class WeatherRequestParameters(
     val location: String = "New York",
-    val units: String = "m"
+    val units: MeasurementUnit
 )
