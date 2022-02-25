@@ -24,21 +24,16 @@ class DefaultWeatherDetailsRepository(
         location: String,
         units: String
     ): WeatherDetails {
-
-        //TODO - use the [openWeatherMapService] to fetch the weather first and fail-over to [weatherStackService]
-        // in case of errors
         return try {
-            weatherStackService.getCurrentWeather(
+            openWeatherMapService.getCurrentWeather(
                 location = location,
                 units = units
             ).toWeatherDetails()
         } catch (exception: HttpException) {
-            WeatherDetails(
-                temperature = 0.0,
-                windSpeed = 0.0,
-                description = "",
-                locationName = ""
-            )
+            weatherStackService.getCurrentWeather(
+                location = location,
+                units = units
+            ).toWeatherDetails()
         }
     }
 }
