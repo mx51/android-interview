@@ -83,7 +83,7 @@ fun Speed.convertTo(
 
         }
 
-        else -> throw NotImplementedError("Conversion from $unit convertTo $newUnit is not implemented yet")
+        else -> throw NotImplementedError("Conversion from $unit to $newUnit is not implemented yet")
     }
 }
 

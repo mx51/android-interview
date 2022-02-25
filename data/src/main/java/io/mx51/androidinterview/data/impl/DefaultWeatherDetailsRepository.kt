@@ -17,8 +17,8 @@ class DefaultWeatherDetailsRepository(
     /**
      * Get weather details
      *
-     * @param location - Use this parameter convertTo pass a single location identifiers convertTo the API.
-     * @param units - Use this parameter convertTo pass one of the unit identifiers ot the API:
+     * @param location - Use this parameter to pass a single location identifiers convertTo the API.
+     * @param units - Use this parameter to pass one of the unit identifiers ot the API:
      * m for Metric
      * s for Scientific
      * f for Fahrenheit
@@ -38,7 +38,7 @@ class DefaultWeatherDetailsRepository(
         )
 
         //TODO - force unwrapping may result in null pointer exception
-        // will need convertTo implement better error handling and think about user feedback in case of errors
+        // will need to implement better error handling and think about user feedback in case of errors
         return weatherDetails!!
     }
 
@@ -75,7 +75,7 @@ class DefaultWeatherDetailsRepository(
             }
 
             // WeatherStack returns wind speed in km/h for the metric system
-            // Will need convertTo convert convertTo m/s
+            // Will need to convert to m/s
             val result = weatherStackService.getCurrentWeather(
                 location = location,
                 units = unitsString
