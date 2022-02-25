@@ -7,5 +7,5 @@ interface WeatherDetailsRepository {
     suspend fun getWeatherDetails(
         location: String,
         units: MeasurementSystem
-    ): WeatherDetails
+    ): WeatherDetails?
 }

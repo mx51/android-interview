@@ -27,7 +27,7 @@ class DefaultWeatherDetailsRepository(
     override suspend fun getWeatherDetails(
         location: String,
         units: MeasurementSystem
-    ): WeatherDetails {
+    ): WeatherDetails? {
 
         val weatherDetails = getWeatherDetailsFromDefaultService(
             location = location,
@@ -37,9 +37,7 @@ class DefaultWeatherDetailsRepository(
             units = units
         )
 
-        //TODO - force unwrapping may result in null pointer exception
-        // will need to implement better error handling and think about user feedback in case of errors
-        return weatherDetails!!
+        return weatherDetails
     }
 
     private suspend fun getWeatherDetailsFromDefaultService(

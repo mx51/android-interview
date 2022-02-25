@@ -6,11 +6,11 @@ import io.mx51.androidinterview.data.model.WeatherDetails
 
 class GetWeatherDetailsUseCase(
     private val weatherDetailsRepository: WeatherDetailsRepository
-): UseCase<() -> WeatherRequestParameters, WeatherDetails>() {
+): UseCase<() -> WeatherRequestParameters, WeatherDetails?>() {
 
     override suspend fun run(
         params: () -> WeatherRequestParameters
-    ): WeatherDetails {
+    ): WeatherDetails? {
 
         return params.invoke().let {
             weatherDetailsRepository.getWeatherDetails(
