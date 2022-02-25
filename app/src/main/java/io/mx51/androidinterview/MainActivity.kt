@@ -26,7 +26,16 @@ class MainActivity : ComponentActivity() {
                     temperature = weatherDetails.temperature.value,
                     windSpeed = weatherDetails.windSpeed.value,
                     description = weatherDetails.description,
-                    useImperial = weatherDetails.temperature.unit == TemperatureUnit.Fahrenheit
+                    useImperial = weatherDetails.temperature.unit == TemperatureUnit.Fahrenheit,
+                    onUnitChange = { useImperialUnits ->
+                        viewModel.convertLatestWeatherDataTo(
+                            if(useImperialUnits) {
+                                MeasurementSystem.Imperial
+                            } else {
+                                MeasurementSystem.Metric
+                            }
+                        )
+                    }
                 ) { useImperialUnits ->
                     viewModel.getWeatherDetails(
                         if(useImperialUnits) {

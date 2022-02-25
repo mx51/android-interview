@@ -4,7 +4,7 @@ import io.mx51.androidinterview.data.WeatherDetailsRepository
 import io.mx51.androidinterview.data.extensions.defaultSpeedUnit
 import io.mx51.androidinterview.data.extensions.speedUnit
 import io.mx51.androidinterview.data.extensions.temperatureUnit
-import io.mx51.androidinterview.data.extensions.to
+import io.mx51.androidinterview.data.extensions.convertTo
 import io.mx51.androidinterview.data.model.*
 import io.mx51.androidinterview.data.retrofit.OpenWeatherMapService
 import io.mx51.androidinterview.data.retrofit.WeatherStackService
@@ -17,8 +17,8 @@ class DefaultWeatherDetailsRepository(
     /**
      * Get weather details
      *
-     * @param location - Use this parameter to pass a single location identifiers to the API.
-     * @param units - Use this parameter to pass one of the unit identifiers ot the API:
+     * @param location - Use this parameter convertTo pass a single location identifiers convertTo the API.
+     * @param units - Use this parameter convertTo pass one of the unit identifiers ot the API:
      * m for Metric
      * s for Scientific
      * f for Fahrenheit
@@ -29,7 +29,7 @@ class DefaultWeatherDetailsRepository(
         units: MeasurementSystem
     ): WeatherDetails {
 
-        val weatherDetails = getWeatherDetailsFromSecondaryService(
+        val weatherDetails = getWeatherDetailsFromDefaultService(
             location = location,
             units = units
         ) ?: getWeatherDetailsFromSecondaryService(
@@ -38,7 +38,7 @@ class DefaultWeatherDetailsRepository(
         )
 
         //TODO - force unwrapping may result in null pointer exception
-        // will need to implement better error handling and think about user feedback in case of errors
+        // will need convertTo implement better error handling and think about user feedback in case of errors
         return weatherDetails!!
     }
 
@@ -75,7 +75,7 @@ class DefaultWeatherDetailsRepository(
             }
 
             // WeatherStack returns wind speed in km/h for the metric system
-            // Will need to convert to m/s
+            // Will need convertTo convert convertTo m/s
             val result = weatherStackService.getCurrentWeather(
                 location = location,
                 units = unitsString
@@ -87,7 +87,7 @@ class DefaultWeatherDetailsRepository(
             return if(units == MeasurementSystem.Metric) {
                 WeatherDetails(
                     temperature = result.temperature,
-                    windSpeed = result.windSpeed.to(
+                    windSpeed = result.windSpeed.convertTo(
                         SpeedUnit.MetersPerSecond
                     ),
                     description = result.description,

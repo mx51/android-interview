@@ -2,6 +2,9 @@ package io.mx51.androidinterview.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.mx51.androidinterview.data.extensions.convertTo
+import io.mx51.androidinterview.data.extensions.defaultSpeedUnit
+import io.mx51.androidinterview.data.extensions.temperatureUnit
 import io.mx51.androidinterview.data.model.MeasurementSystem
 import io.mx51.androidinterview.data.model.WeatherDetails
 import io.mx51.androidinterview.domain.GetWeatherDetailsUseCase
@@ -30,5 +33,33 @@ class WeatherViewModel(
                 )
             }
         }
+    }
+
+    /**
+     * @param system
+     */
+    fun convertLatestWeatherDataTo(
+        system: MeasurementSystem
+    ) {
+        _weatherDetails.value?.let {
+            _weatherDetails.value = WeatherDetails(
+                temperature = it.temperature.convertTo(system.temperatureUnit()),
+                windSpeed = it.windSpeed.convertTo(system.defaultSpeedUnit()),
+                description = it.description,
+                locationName = it.locationName
+            )
+        }
+    }
+
+    fun convertLatestWeatherDataAndRefresh(
+        system: MeasurementSystem
+    ) {
+        convertLatestWeatherDataTo(
+            system = system
+        )
+
+        getWeatherDetails(
+            system = system
+        )
     }
 }

@@ -21,6 +21,7 @@ fun WeatherDetailsScreen(
     windSpeed: Double,
     description: String,
     useImperial: Boolean,
+    onUnitChange: (Boolean) -> Unit,
     onRefreshClicked: (Boolean) -> Unit
 ) {
 
@@ -115,7 +116,7 @@ fun WeatherDetailsScreen(
                     Switch(
                         checked = useImperial,
                         onCheckedChange = {
-                            onRefreshClicked.invoke(it)
+                            onUnitChange.invoke(it)
                         })
                 }
 
@@ -147,6 +148,7 @@ fun WeatherDetailsScreenPreview() {
             description = "Sunny",
             locationName = "Sydney",
             useImperial = true,
+            onUnitChange = {},
             onRefreshClicked = { }
         )
     }
